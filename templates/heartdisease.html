@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block title %}Heart Disease Prediction{% endblock %}
+{% block content %}
+<div class="card">
+  <h2>Heart Disease Prediction</h2>
+  <form action="{{ url_for('predictheartdisease') }}" method="post">
+    <div class="form-grid">
+      <label>Age <input type="number" name="field1" required></label>
+      <label>Sex (0=female,1=male) <input type="number" name="field2" required></label>
+      <label>Chest Pain Type (0–3) <input type="number" name="field3" required></label>
+      <label>Resting BP <input type="number" name="field4" required></label>
+      <label>Cholesterol <input type="number" name="field5" required></label>
+      <label>Fasting BS (0/1) <input type="number" name="field6" required></label>
+      <label>Resting ECG (0-2) <input type="number" name="field7" required></label>
+      <label>Max HR <input type="number" name="field8" required></label>
+      <label>Exercise induced angina (0/1) <input type="number" name="field9" required></label>
+      <label>Oldpeak <input type="number" name="field10" step="any" required></label>
+      <label>Slope (0-2) <input type="number" name="field11" required></label>
+      <label>Number of major vessels (ca 0-4) <input type="number" name="field12" required></label>
+      <label>Thal (0=normal,1=fixed,2=reversible) <input type="number" name="field13" required></label>
+    </div>
+    <button class="btn" style="margin-top:18px;">Predict</button>
+  </form>
+</div>
+
+{% include 'chatbot.html' %}
+{% endblock %}

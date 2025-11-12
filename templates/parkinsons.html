@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% block title %}Parkinson's Prediction{% endblock %}
+{% block content %}
+<div class="card">
+  <h2>Parkinson's Prediction</h2>
+  <form action="{{ url_for('predictparkinsons') }}" method="post">
+    <div class="form-grid">
+      <label>MDVP:Fo(Hz) <input type="number" step="any" name="field1" required></label>
+      <label>MDVP:Fhi(Hz) <input type="number" step="any" name="field2" required></label>
+      <label>MDVP:Flo(Hz) <input type="number" step="any" name="field3" required></label>
+      <label>MDVP:Jitter(%) <input type="number" step="any" name="field4" required></label>
+      <label>MDVP:Jitter(Abs) <input type="number" step="any" name="field5" required></label>
+      <label>MDVP:RAP <input type="number" step="any" name="field6" required></label>
+      <label>MDVP:PPQ <input type="number" step="any" name="field7" required></label>
+      <label>Jitter:DDP <input type="number" step="any" name="field8" required></label>
+      <label>MDVP:Shimmer <input type="number" step="any" name="field9" required></label>
+      <label>MDVP:Shimmer(dB) <input type="number" step="any" name="field10" required></label>
+      <label>Shimmer:APQ3 <input type="number" step="any" name="field11" required></label>
+      <label>Shimmer:APQ5 <input type="number" step="any" name="field12" required></label>
+      <label>MDVP:APQ <input type="number" step="any" name="field13" required></label>
+      <label>Shimmer:DDA <input type="number" step="any" name="field14" required></label>
+      <label>NHR <input type="number" step="any" name="field15" required></label>
+      <label>HNR <input type="number" step="any" name="field16" required></label>
+      <label>RPDE <input type="number" step="any" name="field17" required></label>
+      <label>DFA <input type="number" step="any" name="field18" required></label>
+      <label>spread1 <input type="number" step="any" name="field19" required></label>
+      <label>spread2 <input type="number" step="any" name="field20" required></label>
+      <label>D2 <input type="number" step="any" name="field21" required></label>
+      <label>PPE <input type="number" step="any" name="field22" required></label>
+    </div>
+    <button class="btn" style="margin-top:18px;">Predict</button>
+  </form>
+</div>
+
+{% include 'chatbot.html' %}
+{% endblock %}

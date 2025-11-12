@@ -1,0 +1,95 @@
+<!-- templates/chatbot.html  (plain include, no macros) -->
+<style>
+#chat-widget-wrap { font-family: inherit; }
+#chat-drawer {
+  position: fixed; right: 20px; top: 80px; width: 380px; height: calc(100vh - 120px);
+  background: #fff; box-shadow: 0 8px 28px rgba(16,24,40,0.18); border-radius: 12px;
+  transition: transform .32s ease, opacity .32s ease; transform: translateX(440px); opacity:0;
+  z-index:2300; display:flex; flex-direction:column; overflow:hidden;
+}
+#chat-drawer.open { transform: translateX(0); opacity:1; }
+#chat-drawer .chat-header { padding:12px 14px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center; }
+#chat-body { padding:14px; flex:1; overflow-y:auto; background:#fbfbfb; }
+.chat-msg { margin:8px 0; padding:10px 12px; border-radius:12px; max-width:85%; }
+.chat-msg.user { background:var(--accent,#16a085); color:#fff; margin-left:auto; text-align:right; }
+.chat-msg.bot  { background:#f0f0f0; color:#222; margin-right:auto; text-align:left; }
+#chat-input-row { display:flex; gap:8px; padding:10px; border-top:1px solid #eee; }
+#chat-input-row input { flex:1; padding:10px 12px; border-radius:8px; border:1px solid #e6e6e6; outline:none; }
+#chat-input-row button { padding:10px 14px; border-radius:8px; border:none; background:var(--accent,#16a085); color:#fff; cursor:pointer; }
+#chat-toggle { position: fixed; right:24px; bottom:26px; width:56px; height:56px; border-radius:50%; background:var(--accent,#16a085); color:#fff; display:flex; align-items:center; justify-content:center; box-shadow:0 8px 22px rgba(16,24,40,0.18); z-index:2400; cursor:pointer; border:none; font-size:20px; transition:opacity .25s ease; }
+@media (max-width:520px){ #chat-drawer{ display:none; } }
+</style>
+
+<div id="chat-widget-wrap" aria-hidden="false">
+  <button id="chat-toggle" title="Open Chat" aria-expanded="false" aria-controls="chat-drawer">
+    <i class="fas fa-comment-dots" aria-hidden="true"></i>
+  </button>
+
+  <aside id="chat-drawer" role="dialog" aria-hidden="true" aria-label="AI Health ChatBot">
+    <div class="chat-header">
+      <h4>AI Health ChatBot</h4>
+      <button id="chat-close" aria-label="Close chat" style="background:#fff;border:2px solid #222;border-radius:8px;padding:2px 8px;cursor:pointer;">✕</button>
+    </div>
+
+    <div id="chat-body" aria-live="polite">
+      <div class="chat-msg bot">Hello 👋 I'm your AI Health Assistant. Ask me anything about symptoms or the prediction results.</div>
+    </div>
+
+    <div id="chat-input-row">
+      <input id="chat-input" placeholder="Type your message..." autocomplete="off" />
+      <button id="chat-send">Send</button>
+    </div>
+  </aside>
+</div>
+
+<script>
+(function () {
+  const chatDrawer = document.getElementById('chat-drawer');
+  const chatToggle = document.getElementById('chat-toggle');
+  const chatClose  = document.getElementById('chat-close');
+  const chatBody   = document.getElementById('chat-body');
+  const chatInput  = document.getElementById('chat-input');
+  const chatSend   = document.getElementById('chat-send');
+  if (!chatDrawer || !chatToggle) return;
+
+  function openChat(){
+    chatDrawer.classList.add('open');
+    chatDrawer.setAttribute('aria-hidden','false');
+    chatToggle.style.opacity = '0';
+    chatToggle.style.pointerEvents = 'none';
+    chatToggle.setAttribute('aria-expanded','true');
+    setTimeout(()=> { if (chatInput) chatInput.focus(); }, 240);
+  }
+  function closeChat(){
+    chatDrawer.classList.remove('open');
+    chatDrawer.setAttribute('aria-hidden','true');
+    chatToggle.style.opacity = '1';
+    chatToggle.style.pointerEvents = 'auto';
+    chatToggle.setAttribute('aria-expanded','false');
+    chatToggle.focus();
+  }
+
+  chatToggle.addEventListener('click', ()=> { if (chatDrawer.classList.contains('open')) closeChat(); else openChat(); });
+  if (chatClose) chatClose.addEventListener('click', (e)=>{ e.preventDefault(); closeChat(); });
+  document.addEventListener('keydown', (e)=>{ if (e.key === 'Escape' && chatDrawer.classList.contains('open')) closeChat(); });
+
+  function appendMsg(text, who='bot'){
+    const el = document.createElement('div'); el.className = 'chat-msg ' + (who==='user' ? 'user' : 'bot'); el.innerText = text; chatBody.appendChild(el); chatBody.scrollTop = chatBody.scrollHeight;
+  }
+  function sendUserMessage(){
+    const t = chatInput.value.trim(); if (!t) return; appendMsg(t,'user'); chatInput.value = '';
+    setTimeout(()=> {
+      let reply = "I'm not a doctor — if symptoms are severe, please consult a professional.";
+      const low = t.toLowerCase();
+      if (low.includes('diabetes')) reply = "For diabetes: keep a healthy diet, monitor blood sugar, and consult your doctor for tests.";
+      else if (low.includes('heart')) reply = "For heart concerns: seek ECG/lipid profile and consult a cardiologist.";
+      else if (low.includes('parkinson')) reply = "For Parkinson's: see a neurologist for an exam and consider early physio/therapy options.";
+      else if (low.includes('hi')||low.includes('hello')) reply = "Hello! Ask me about diabetes, heart, or parkinson's prediction results.";
+      appendMsg(reply,'bot');
+    }, 600);
+  }
+
+  chatSend.addEventListener('click', sendUserMessage);
+  chatInput.addEventListener('keydown', (e)=> { if (e.key === 'Enter') sendUserMessage(); });
+})();
+</script>

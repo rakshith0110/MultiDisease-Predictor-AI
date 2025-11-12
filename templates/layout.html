@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>{% block title %}AI Disease Prediction{% endblock %}</title>
+
+  <!-- shared css -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <!-- fontawesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="{{ url_for('main') }}">
+        <i class="fas fa-heartbeat"></i>
+        <span><strong>AI</strong> Disease Prediction</span>
+      </a>
+
+      <nav class="nav">
+        <a href="{{ url_for('main') }}">Home</a>
+        <a href="{{ url_for('chatbot') }}">AI ChatBot</a>
+        <a href="#contact">Contact Us</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container main-content">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      Created by <strong>Rakshith P R</strong> | All Rights Reserved
+    </div>
+  </footer>
+
+</body>
+</html>

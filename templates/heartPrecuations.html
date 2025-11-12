@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block title %}Heart Result{% endblock %}
+{% block content %}
+<div class="card">
+  <h2>Heart Disease Result</h2>
+  {% if output_text %}
+    <div style="font-weight:700; margin-bottom:12px;">{{ output_text }}</div>
+  {% endif %}
+  <div>
+    <h4>Precautions</h4>
+    <ul>
+      <li>Seek medical evaluation — ECG and lipid tests recommended.</li>
+      <li>Adopt a low-sodium, heart-healthy diet and avoid smoking.</li>
+      <li>Regular moderate exercise after physician clearance.</li>
+      <li>Follow cardiologist's recommendations for medications if required.</li>
+    </ul>
+  </div>
+  <a class="btn" href="{{ url_for('main') }}" style="margin-top:12px; display:inline-block;">Back to Home</a>
+</div>
+
+{% include 'chatbot.html' %}
+{% endblock %}

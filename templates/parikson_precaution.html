@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% block title %}Parkinson's Result{% endblock %}
+{% block content %}
+<div class="card">
+  <h2>Parkinson's Result</h2>
+  {% if output_text %}
+    <div style="font-weight:700; margin-bottom:12px;">{{ output_text }}</div>
+  {% endif %}
+  <div>
+    <h4>Precautions</h4>
+    <ul>
+      <li>Consult a neurologist for clinical evaluation and confirmation.</li>
+      <li>Consider physiotherapy and balance training programs.</li>
+      <li>Discuss early symptomatic treatments if recommended by a specialist.</li>
+    </ul>
+  </div>
+  <a class="btn" href="{{ url_for('main') }}" style="margin-top:12px; display:inline-block;">Back to Home</a>
+</div>
+
+{% include 'chatbot.html' %}
+{% endblock %}

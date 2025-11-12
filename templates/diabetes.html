@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block title %}Diabetes Prediction{% endblock %}
+{% block content %}
+<div class="card">
+  <h2>Diabetes Prediction</h2>
+  <form action="{{ url_for('predictdiabetes') }}" method="post">
+    <div class="form-grid">
+      <label>Pregnancies <input type="number" name="field1" required></label>
+      <label>Glucose <input type="number" name="field2" required></label>
+      <label>Blood Pressure <input type="number" name="field3" required></label>
+      <label>Skin Thickness <input type="number" name="field4" required></label>
+      <label>Insulin <input type="number" name="field5" required></label>
+      <label>BMI <input type="number" name="field6" required></label>
+      <label>Diabetes Pedigree Function <input type="number" name="field7" required></label>
+      <label>Age <input type="number" name="field8" required></label>
+    </div>
+    <button class="btn" style="margin-top:18px;">Predict</button>
+  </form>
+</div>
+
+{% include 'chatbot.html' %}
+{% endblock %}
