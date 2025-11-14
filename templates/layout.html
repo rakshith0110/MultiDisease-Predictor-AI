@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>{% block title %}AI Disease Prediction{% endblock %}</title>
+  <title>{% block title %}Multi Disease Prediction{% endblock %}</title>
 
   <!-- SINGLE shared CSS (make sure this file exists: static/css/style.css) -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
@@ -18,7 +18,7 @@
     <div class="container header-inner" style="display:flex;align-items:center;justify-content:space-between;">
       <a class="logo" href="{{ url_for('main') }}">
         <i class="fas fa-heartbeat" style="color:#ff6b6b"></i>
-        <span style="margin-left:6px;"><strong>Multi</strong> Disease Prediction</span>
+        <span style="margin-left:6px;color:#f05454"><strong>Multi</strong> Disease Prediction</span>
       </a>
 
       <nav class="navbar">
@@ -39,9 +39,8 @@
     </div>
   </footer>
 
-  <!-- optional small script to help with chatbot toggling if you use it -->
   <script>
-    // simple helper to check CSS loaded (for debugging only)
+    // small helper to check CSS loaded (for debugging only)
     (function(){
       var s = getComputedStyle && getComputedStyle(document.body);
       if (!s || s.backgroundColor === '') {

@@ -34,118 +34,135 @@
     <!-- RIGHT: dynamic panel + forms (scrollable) -->
     <div class="form-area" style="flex:1; min-width:420px;">
 
-      <!-- header panel (title + smaller illustration) -->
-      <div id="model-panel" class="card panel-small" style="padding:12px 14px; display:flex; gap:12px; align-items:center; justify-content:space-between;">
-        <div style="flex:1; min-width:200px;">
-          <h3 id="model-title" style="margin:0;font-size:1.25rem;">Diabetes Prediction</h3>
-          <p id="model-sub" style="margin:6px 0 0;color:var(--muted);font-size:0.95rem;">Fill the inputs and click Predict. Result appears below.</p>
+      <!-- UPDATED header panel: Title, subtitle, top Predict button, and top result box -->
+      <div id="model-panel" class="card panel-small" 
+           style="padding:16px 20px; display:flex; gap:20px; align-items:center; justify-content:space-between;">
+
+        <!-- LEFT SIDE : Title + Sub + Predict Button + Result -->
+        <div style="flex:1; min-width:300px;">
+          
+          <!-- Dynamic Title -->
+          <h3 id="model-title" style="margin:0;font-size:1.35rem; font-weight:700;">
+            Diabetes Prediction
+          </h3>
+
+          <!-- Subtitle -->
+          <p id="model-sub" style="margin:6px 0 12px;color:var(--muted);font-size:0.95rem;">
+            Fill the inputs and click Predict. Result appears below.
+          </p>
+
+          <!-- Predict Button (HEAD LEVEL) -->
+          <button id="top-predict-btn" class="btn" type="button" 
+                  style="margin-bottom:10px;">
+            Predict
+          </button>
+
+          <!-- RESULT AREA (hidden until a result exists) -->
+          <div id="top-result-box" class="top-result hidden" style="margin-top:10px; padding:12px; border-radius:8px;">
+            <div id="top-result-text" style="font-weight:700; margin-bottom:8px;"></div>
+
+            <!-- More details link (goes to precaution pages) -->
+            <a id="more-details-link" href="#" class="btn" 
+               style="padding:6px 12px; font-size:0.85rem;">
+              More details →
+            </a>
+          </div>
         </div>
 
-        <div style="width:120px; flex:0 0 120px; display:flex; align-items:center; justify-content:center;">
-          <img src="{{ url_for('static', filename='image/diagnostic.png') }}" alt="Diagnostic" class="model-illustration small">
+        <!-- RIGHT SIDE : Illustration -->
+        <div style="width:130px; flex:0 0 130px;">
+          <img src="{{ url_for('static', filename='image/diagnostic.png') }}" 
+               class="model-illustration small">
         </div>
       </div>
+
+      <!-- Hidden server-provided data (safe) -->
+      <div id="server-data" style="display:none;"
+           data-diabetes-present="{{ '1' if (diabetes_result is defined) else '0' }}"
+           data-diabetes-res="{{ (diabetes_result|e) if (diabetes_result is defined) else '' }}"
+           data-diabetes-msg="{{ (diabetes_message|e) if (diabetes_message is defined) else '' }}"
+           data-heart-present="{{ '1' if (heart_result is defined) else '0' }}"
+           data-heart-res="{{ (heart_result|e) if (heart_result is defined) else '' }}"
+           data-heart-msg="{{ (heart_message|e) if (heart_message is defined) else '' }}"
+           data-parkinsons-present="{{ '1' if (parkinsons_result is defined) else '0' }}"
+           data-parkinsons-res="{{ (parkinsons_result|e) if (parkinsons_result is defined) else '' }}"
+           data-parkinsons-msg="{{ (parkinsons_message|e) if (parkinsons_message is defined) else '' }}"
+      ></div>
 
       <!-- the scrollable form container -->
       <div id="model-form-wrap" class="form-scroll-area" style="margin-top:16px;">
 
         <!-- ---------- DIABETES FORM (8 fields) ---------- -->
         <form id="form-diabetes" class="model-form card" method="POST" action="{{ url_for('predictdiabetes') }}">
-          <div class="form-grid" style="display:grid; grid-template-columns: repeat(2,1fr); gap:14px 18px;">
-            <div>
-              <label>Pregnancies</label>
-              <input name="pregnancies" type="text" placeholder="e.g. 2" required>
-            </div>
-            <div>
-              <label>Glucose</label>
-              <input name="glucose" type="text" placeholder="e.g. 120" required>
-            </div>
-            <div>
-              <label>Blood Pressure</label>
-              <input name="bloodpressure" type="text" placeholder="e.g. 70" required>
-            </div>
-            <div>
-              <label>Skin Thickness</label>
-              <input name="skinthickness" type="text" placeholder="e.g. 20" required>
-            </div>
-            <div>
-              <label>Insulin</label>
-              <input name="insulin" type="text" placeholder="e.g. 85" required>
-            </div>
-            <div>
-              <label>BMI</label>
-              <input name="bmi" type="text" placeholder="e.g. 26.5" required>
-            </div>
-            <div>
-              <label>Diabetes Pedigree Function</label>
-              <input name="dpf" type="text" placeholder="e.g. 0.627" required>
-            </div>
-            <div>
-              <label>Age</label>
-              <input name="age" type="text" placeholder="e.g. 33" required>
-            </div>
-          </div>
-
-          <div style="margin-top:14px;">
+          <div style="display:flex; justify-content:flex-end; margin-bottom:8px; visibility:hidden;">
             <button class="btn" type="submit">Predict Diabetes</button>
           </div>
 
-          {% if diabetes_result is defined %}
-          <div class="result-box" style="margin-top:12px; color:{{ 'green' if diabetes_result=='Negative' else 'red' }};">
-            {{ diabetes_result }} — {{ diabetes_message|default('') }}
+          <div class="form-grid" style="display:grid; grid-template-columns: repeat(2,1fr); gap:14px 18px;">
+            <label>Pregnancies <input name="pregnancies" type="number" placeholder="e.g. 2" required></label>
+            <label>Glucose <input name="glucose" type="number" placeholder="e.g. 120" required></label>
+            <label>Blood Pressure <input name="bloodpressure" type="number" placeholder="e.g. 70" required></label>
+            <label>Skin Thickness <input name="skinthickness" type="number" placeholder="e.g. 20" required></label>
+            <label>Insulin <input name="insulin" type="number" placeholder="e.g. 85" required></label>
+            <label>BMI <input name="bmi" type="number" step="0.1" placeholder="e.g. 26.5" required></label>
+            <label>Diabetes Pedigree Function <input name="dpf" type="number" step="0.001" placeholder="e.g. 0.627" required></label>
+            <label>Age <input name="age" type="number" placeholder="e.g. 33" required></label>
           </div>
-          {% endif %}
         </form>
 
         <!-- ---------- HEART FORM (13 fields) ---------- -->
         <form id="form-heart" class="model-form card hidden" method="POST" action="{{ url_for('predictheartdisease') }}">
-          <div class="form-grid" style="display:grid; grid-template-columns: repeat(2,1fr); gap:14px 18px;">
-            <div><label>Age</label><input name="age" required></div>
-            <div><label>Sex (0=female,1=male)</label><input name="sex" required></div>
-            <div><label>Chest Pain Type (0-3)</label><input name="cp" required></div>
-            <div><label>Resting BP</label><input name="trestbps" required></div>
-            <div><label>Cholesterol</label><input name="chol" required></div>
-            <div><label>Fasting BS (0/1)</label><input name="fbs" required></div>
-            <div><label>Resting ECG (0-2)</label><input name="restecg" required></div>
-            <div><label>Max Heart Rate</label><input name="thalach" required></div>
-            <div><label>Exercise induced angina (0/1)</label><input name="exang" required></div>
-            <div><label>Oldpeak</label><input name="oldpeak" required></div>
-            <div><label>Slope (0-2)</label><input name="slope" required></div>
-            <div><label>Number of major vessels (0-4)</label><input name="ca" required></div>
-            <div><label>Thal (0/1/2)</label><input name="thal" required></div>
-          </div>
-
-          <div style="margin-top:14px;">
+          <div style="display:flex; justify-content:flex-end; margin-bottom:8px; visibility:hidden;">
             <button class="btn" type="submit">Predict Heart</button>
           </div>
 
-          {% if heart_result is defined %}
-          <div class="result-box" style="margin-top:12px; color:{{ 'green' if heart_result=='Negative' else 'red' }};">
-            {{ heart_result }} — {{ heart_message|default('') }}
+          <div class="form-grid" style="display:grid; grid-template-columns: repeat(2,1fr); gap:14px 18px;">
+            <label>Age <input name="age" type="number" placeholder="e.g. 55" required></label>
+            <label>Sex (0=female,1=male) <input name="sex" type="number" min="0" max="1" placeholder="0 or 1" required></label>
+            <label>Chest Pain Type (0–3) <input name="cp" type="number" min="0" max="3" placeholder="0 to 3" required></label>
+            <label>Resting BP (mm Hg) <input name="trestbps" type="number" placeholder="e.g. 130" required></label>
+            <label>Cholesterol (mg/dl) <input name="chol" type="number" placeholder="e.g. 250" required></label>
+            <label>Fasting BS (0=no,1=yes) <input name="fbs" type="number" min="0" max="1" placeholder="0 or 1" required></label>
+            <label>Resting ECG (0–2) <input name="restecg" type="number" min="0" max="2" placeholder="0 to 2" required></label>
+            <label>Max Heart Rate Achieved <input name="thalach" type="number" placeholder="e.g. 150" required></label>
+            <label>Exercise induced angina (0/1) <input name="exang" type="number" min="0" max="1" placeholder="0 or 1" required></label>
+            <label>Oldpeak (ST depression) <input name="oldpeak" type="number" step="0.1" placeholder="e.g. 1.4" required></label>
+            <label>Slope (0–2) <input name="slope" type="number" min="0" max="2" placeholder="0 to 2" required></label>
+            <label>Number of major vessels (0–4) <input name="ca" type="number" min="0" max="4" placeholder="0 to 4" required></label>
+            <label>Thal (0=normal,1=fixed,2=reversible) <input name="thal" type="number" min="0" max="2" placeholder="0, 1 or 2" required></label>
           </div>
-          {% endif %}
         </form>
 
         <!-- ---------- PARKINSONS FORM (22 fields) ---------- -->
         <form id="form-parkinsons" class="model-form card hidden" method="POST" action="{{ url_for('predictparkinsons') }}">
-          <div class="form-grid" style="display:grid; grid-template-columns: repeat(2,1fr); gap:14px 18px;">
-            {% for i in range(1,23) %}
-            <div>
-              <label>Feature {{ i }}</label>
-              <input name="f{{ i }}" required>
-            </div>
-            {% endfor %}
-          </div>
-
-          <div style="margin-top:14px;">
+          <div style="display:flex; justify-content:flex-end; margin-bottom:8px; visibility:hidden;">
             <button class="btn" type="submit">Predict Parkinsons</button>
           </div>
 
-          {% if parkinsons_result is defined %}
-          <div class="result-box" style="margin-top:12px; color:{{ 'green' if parkinsons_result=='Negative' else 'red' }};">
-            {{ parkinsons_result }} — {{ parkinsons_message|default('') }}
+          <div class="form-grid" style="display:grid; grid-template-columns: repeat(2,1fr); gap:14px 18px;">
+            <label>MDVP:Fo(Hz) <input name="f1" type="number" step="any" placeholder="e.g. 119.992" required></label>
+            <label>MDVP:Fhi(Hz) <input name="f2" type="number" step="any" placeholder="e.g. 157.302" required></label>
+            <label>MDVP:Flo(Hz) <input name="f3" type="number" step="any" placeholder="e.g. 74.997" required></label>
+            <label>MDVP:Jitter(%) <input name="f4" type="number" step="any" placeholder="e.g. 0.00784" required></label>
+            <label>MDVP:Jitter(Abs) <input name="f5" type="number" step="any" placeholder="e.g. 0.00007" required></label>
+            <label>MDVP:RAP <input name="f6" type="number" step="any" placeholder="e.g. 0.00370" required></label>
+            <label>MDVP:PPQ <input name="f7" type="number" step="any" placeholder="e.g. 0.00554" required></label>
+            <label>Jitter:DDP <input name="f8" type="number" step="any" placeholder="e.g. 0.01145" required></label>
+            <label>MDVP:Shimmer <input name="f9" type="number" step="any" placeholder="e.g. 0.04374" required></label>
+            <label>MDVP:Shimmer(dB) <input name="f10" type="number" step="any" placeholder="e.g. 0.426" required></label>
+            <label>Shimmer:APQ3 <input name="f11" type="number" step="any" placeholder="e.g. 0.02182" required></label>
+            <label>Shimmer:APQ5 <input name="f12" type="number" step="any" placeholder="e.g. 0.03130" required></label>
+            <label>MDVP:APQ <input name="f13" type="number" step="any" placeholder="e.g. 0.02971" required></label>
+            <label>Shimmer:DDA <input name="f14" type="number" step="any" placeholder="e.g. 0.1053" required></label>
+            <label>NHR <input name="f15" type="number" step="any" placeholder="e.g. 0.02211" required></label>
+            <label>HNR <input name="f16" type="number" step="any" placeholder="e.g. 21.033" required></label>
+            <label>RPDE <input name="f17" type="number" step="any" placeholder="e.g. 0.414783" required></label>
+            <label>DFA <input name="f18" type="number" step="any" placeholder="e.g. 0.815285" required></label>
+            <label>spread1 <input name="f19" type="number" step="any" placeholder="e.g. -4.8139" required></label>
+            <label>spread2 <input name="f20" type="number" step="any" placeholder="e.g. 0.26648" required></label>
+            <label>D2 <input name="f21" type="number" step="any" placeholder="e.g. 2.301442" required></label>
+            <label>PPE <input name="f22" type="number" step="any" placeholder="e.g. 0.284654" required></label>
           </div>
-          {% endif %}
         </form>
 
       </div>
@@ -155,7 +172,7 @@
 
 {% include 'chatbot.html' %}
 
-<!-- Toggle JS: switch models and forms -->
+<!-- Toggle JS: switch models and forms + header predict + top result display -->
 <script>
   (function(){
     const items = document.querySelectorAll('.model-item');
@@ -167,7 +184,28 @@
     const title = document.getElementById('model-title');
     const subtitle = document.getElementById('model-sub');
 
+    const topBtn = document.getElementById("top-predict-btn");
+    const resultBox = document.getElementById("top-result-box");
+    const resultText = document.getElementById("top-result-text");
+    const moreLink = document.getElementById("more-details-link");
+    const serverData = document.getElementById("server-data");
+
+    let activeModel = "diabetes";
+
+    function setResultColor(box, statusStr) {
+      box.classList.remove('result-good','result-bad','result-neutral');
+      if (!statusStr) { box.classList.add('result-neutral'); return; }
+      // statusStr expected to contain "Positive", "Negative" or "Error"
+      const s = statusStr.toString().toLowerCase();
+      if (s.indexOf('positive') !== -1 || s.indexOf('error') !== -1) {
+        box.classList.add('result-bad');
+      } else {
+        box.classList.add('result-good');
+      }
+    }
+
     function showModel(name){
+      activeModel = name;
       items.forEach(it => it.classList.toggle('active', it.dataset.model === name));
       Object.values(forms).forEach(f => f.classList.add('hidden'));
       if (forms[name]) forms[name].classList.remove('hidden');
@@ -175,16 +213,20 @@
       if (name === 'diabetes') {
         title.textContent = 'Diabetes Prediction';
         subtitle.textContent = 'Fill the inputs and click Predict. Result appears below.';
+        moreLink.dataset.target = '/diabetesprecaution';
       } else if (name === 'heart') {
         title.textContent = 'Heart Prediction';
         subtitle.textContent = 'Fill the inputs and click Predict. Result appears below.';
+        moreLink.dataset.target = '/heartPrecuations';
       } else {
         title.textContent = "Parkinson's Prediction";
         subtitle.textContent = 'Fill the inputs and click Predict. Result appears below.';
+        moreLink.dataset.target = '/parikson_precaution';
       }
-      // scroll the right form area to top so user sees the form header
       const wrap = document.querySelector('.form-scroll-area');
       if (wrap) wrap.scrollTop = 0;
+      resultBox.classList.add('hidden');
+      resultBox.classList.remove('result-good','result-bad','result-neutral');
     }
 
     items.forEach(it=>{
@@ -194,17 +236,222 @@
       });
     });
 
-    // show default on load
+    // top button triggers submit on currently visible form
+    topBtn.addEventListener('click', ()=>{
+      if (forms[activeModel]) {
+        if (typeof forms[activeModel].requestSubmit === 'function') {
+          forms[activeModel].requestSubmit();
+        } else {
+          forms[activeModel].submit();
+        }
+      }
+    });
+
+    // Read server-provided values safely from data-* attributes (if present)
+    if (serverData) {
+      const hasDiab = serverData.dataset.diabetesPresent === '1';
+      const hasHeart = serverData.dataset.heartPresent === '1';
+      const hasPark = serverData.dataset.parkinsonsPresent === '1';
+
+      if (hasDiab) {
+        showModel('diabetes');
+        const res = serverData.dataset.diabetesRes || '';
+        const msg = serverData.dataset.diabetesMsg || '';
+        resultText.textContent = (res ? res : '') + (msg ? (' — ' + msg) : '');
+        setResultColor(resultBox, res);
+        moreLink.href = '/diabetesprecaution';
+        resultBox.classList.remove('hidden');
+      } else if (hasHeart) {
+        showModel('heart');
+        const res = serverData.dataset.heartRes || '';
+        const msg = serverData.dataset.heartMsg || '';
+        resultText.textContent = (res ? res : '') + (msg ? (' — ' + msg) : '');
+        setResultColor(resultBox, res);
+        moreLink.href = '/heartPrecuations';
+        resultBox.classList.remove('hidden');
+      } else if (hasPark) {
+        showModel('parkinsons');
+        const res = serverData.dataset.parkinsonsRes || '';
+        const msg = serverData.dataset.parkinsonsMsg || '';
+        resultText.textContent = (res ? res : '') + (msg ? (' — ' + msg) : '');
+        setResultColor(resultBox, res);
+        moreLink.href = '/parikson_precaution';
+        resultBox.classList.remove('hidden');
+      }
+    }
+
+    // If user clicks More details, open the correct precaution page:
+    moreLink.addEventListener('click', function(e){
+      // if it's a dataset target (fallback), use it
+      if (!moreLink.href || moreLink.href === '#' || moreLink.href.endsWith('#')) {
+        const t = moreLink.dataset.target;
+        if (t) { window.location.href = t; e.preventDefault(); }
+      }
+    });
+
+    // initial default
     showModel('diabetes');
   })();
 </script>
 
 <style>
+  /* result color classes */
+  .result-good { background: #ecfff7; border: 1px solid #bff0d9; color: #0b8a56; }
+  .result-bad  { background: #fff4f4; border: 1px solid #f2c3c3; color: #a82424; }
+  .result-neutral { background:#fff; border:1px solid #eee; color:#333; }
+
   /* small helpers */
   .hidden { display: none !important; }
   .model-item.active { border-color: var(--accent); background: #e9fff6; box-shadow: 0 6px 18px rgba(0,0,0,0.04); }
   .result-box { padding:12px; border-radius:8px; background:#fff8f8; border:1px solid #f3dede; }
   @media (max-width: 980px){ .models { position: static; } .form-area { max-height:none; } }
 </style>
+
+<script>
+(function(){
+  // mapping: for each API, the order of inputs expected (field1..fieldN)
+  const mappings = {
+    diabetes: ['pregnancies','glucose','bloodpressure','skinthickness','insulin','bmi','dpf','age'],
+    heart: ['age','sex','cp','trestbps','chol','fbs','restecg','thalach','exang','oldpeak','slope','ca','thal'],
+    parkinsons: (function(){
+      // f1..f22
+      const arr = [];
+      for (let i=1;i<=22;i++) arr.push('f'+i);
+      return arr;
+    })()
+  };
+
+  const apiUrls = {
+    diabetes: '/api/predict/diabetes',
+    heart: '/api/predict/heart',
+    parkinsons: '/api/predict/parkinsons'
+  };
+
+  const moreLinks = {
+    diabetes: '/diabetesprecaution',
+    heart: '/heartPrecuations',
+    parkinsons: '/parikson_precaution'
+  };
+
+  const items = document.querySelectorAll('.model-item');
+  const forms = {
+    diabetes: document.getElementById('form-diabetes'),
+    heart: document.getElementById('form-heart'),
+    parkinsons: document.getElementById('form-parkinsons')
+  };
+  const topBtn = document.getElementById('top-predict-btn');
+  const topBox = document.getElementById('top-result-box');
+  const topText = document.getElementById('top-result-text');
+  const moreBtn = document.getElementById('more-details-link');
+
+  let active = 'diabetes';
+  function setActive(name){
+    active = name;
+    items.forEach(it=> it.classList.toggle('active', it.dataset.model === name));
+    Object.values(forms).forEach(f=> f.classList.add('hidden'));
+    if (forms[name]) forms[name].classList.remove('hidden');
+    // hide previous result
+    topBox.classList.add('hidden');
+    topBox.classList.remove('result-good','result-bad','result-neutral');
+  }
+
+  items.forEach(it=>{
+    it.addEventListener('click', ()=> setActive(it.dataset.model));
+  });
+  // default
+  setActive('diabetes');
+
+  function setTopResult(text, status, modelKey){
+    // status: boolean positive? OR string
+    // decide color: if text contains 'Positive' or status === true -> red else green
+    const low = (''+text).toLowerCase();
+    topText.textContent = text;
+    if (low.includes('positive') || low.includes('error') || status === true) {
+      topBox.classList.add('result-bad');
+      topBox.classList.remove('result-good','result-neutral');
+    } else {
+      topBox.classList.add('result-good');
+      topBox.classList.remove('result-bad','result-neutral');
+    }
+    moreBtn.href = moreLinks[modelKey] || '#';
+    topBox.classList.remove('hidden');
+    // ensure header visible
+    const panel = document.getElementById('model-panel');
+    if (panel) panel.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+
+  // helper: validate and build FormData with field1..fieldN expected by API
+  function buildFieldPayload(modelKey){
+    const map = mappings[modelKey];
+    const form = forms[modelKey];
+    if (!map || !form) return { error: 'Form not found' };
+    const payload = new URLSearchParams(); // send as form urlencoded
+    for (let i=0;i<map.length;i++){
+      const name = map[i];
+      const el = form.querySelector(`[name="${name}"]`);
+      if (!el) return { error: `Missing input ${name} in form for ${modelKey}` };
+      const v = el.value.trim();
+      if (v === '') return { error: `Please fill ${name} field` };
+      payload.append(`field${i+1}`, v);
+    }
+    return { payload };
+  }
+
+  async function doPredict(modelKey){
+    const build = buildFieldPayload(modelKey);
+    if (build.error) {
+      setTopResult(build.error, 'error', modelKey);
+      return;
+    }
+    const url = apiUrls[modelKey];
+    try {
+      // show temporary neutral box
+      setTopResult('Predicting...','neutral', modelKey);
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: build.payload.toString()
+      });
+      if (!res.ok) {
+        let txt = await res.text();
+        setTopResult('Server error: ' + (txt || res.statusText), 'error', modelKey);
+        return;
+      }
+      const j = await res.json();
+      if (j.error) {
+        setTopResult('Error: ' + j.error, true, modelKey);
+        return;
+      }
+      // API returns { positive: bool, message: "...", prescription: "..." }
+      const positive = j.positive === true || j.positive === 'true' || j.positive === 1;
+      const message = j.message || (positive ? 'Positive' : 'Negative');
+      const text = (positive ? 'Positive' : 'Negative') + ' — ' + message;
+      setTopResult(text, positive, modelKey);
+    } catch (err) {
+      setTopResult('Network or JS error: ' + err.message, true, modelKey);
+    }
+  }
+
+  // attach to top button
+  topBtn.addEventListener('click', function(e){
+    e.preventDefault();
+    doPredict(active);
+  });
+
+  // also attach Enter key on forms to trigger AJAX
+  Object.keys(forms).forEach(k=>{
+    const f = forms[k];
+    if (!f) return;
+    f.addEventListener('submit', function(ev){
+      ev.preventDefault(); // prevent regular post
+      doPredict(k);
+    });
+  });
+
+  // If you want the old server-render path to still show results when page reloads,
+  // keep the server-driven snippet already present. This AJAX path ensures interactive UX.
+
+})();
+</script>
 
 {% endblock %}

@@ -16,7 +16,6 @@ def load_model(filename):
     with open(path, 'rb') as f:
         return pickle.load(f)
 
-# Load models (if present)
 # Load models
 diabetes_model = load_model('diabetes.pkl')
 heart_model = load_model('heart.pkl')
@@ -26,7 +25,6 @@ parkinsons_model = load_model('parkinsons.pkl')
 diabetes_predict = diabetes_model
 heart_predict = heart_model
 parkinsons_predict = parkinsons_model
-
 
 PRESCRIPTIONS = {
     'diabetes': "Diet, exercise, monitor glucose, consult clinician.",
@@ -79,6 +77,19 @@ def parkinsons_page():
 @app.route('/chatbot')
 def chatbot():
     return render_template('chatbot.html')
+
+@app.route('/diabetesprecaution')
+def diabetes_precaution():
+    return render_template('diabetesprecaution.html')
+
+@app.route('/heartPrecuations')
+def heart_precautions():
+    return render_template('heartPrecuations.html')
+
+@app.route('/parikson_precaution')
+def parkinson_precaution():
+    return render_template('parikson_precaution.html')
+
 
 # ---------- API endpoints for ajax forms ----------
 @app.route('/api/predict/diabetes', methods=['POST'])
