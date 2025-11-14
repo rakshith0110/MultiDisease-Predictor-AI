@@ -3,23 +3,25 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>{% block title %}Multi Disease Predictor - AI{% endblock %}</title>
+  <title>{% block title %}AI Disease Prediction{% endblock %}</title>
 
-  <!-- shared css -->
+  <!-- SINGLE shared CSS (make sure this file exists: static/css/style.css) -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-  <!-- fontawesome for icons -->
+
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
 
-  <header class="site-header">
-    <div class="container header-inner">
+  <!-- header must match CSS selectors (.header, .logo, .navbar) -->
+  <header class="header">
+    <div class="container header-inner" style="display:flex;align-items:center;justify-content:space-between;">
       <a class="logo" href="{{ url_for('main') }}">
-        <i class="fas fa-heartbeat"></i>
-        <span><strong>Multi</strong> Disease Prediction</span>
+        <i class="fas fa-heartbeat" style="color:#ff6b6b"></i>
+        <span style="margin-left:6px;"><strong>Multi</strong> Disease Prediction</span>
       </a>
 
-      <nav class="nav">
+      <nav class="navbar">
         <a href="{{ url_for('main') }}">Home</a>
         <a href="{{ url_for('chatbot') }}">AI ChatBot</a>
         <a href="#contact">Contact Us</a>
@@ -32,10 +34,20 @@
   </main>
 
   <footer class="site-footer">
-    <div class="container">
+    <div class="container" style="text-align:center;padding:18px 0;">
       Created by <strong>Rakshith P R</strong> | All Rights Reserved
     </div>
   </footer>
 
+  <!-- optional small script to help with chatbot toggling if you use it -->
+  <script>
+    // simple helper to check CSS loaded (for debugging only)
+    (function(){
+      var s = getComputedStyle && getComputedStyle(document.body);
+      if (!s || s.backgroundColor === '') {
+        console.warn('Warning: styles may not be loaded (check static/css/style.css path).');
+      }
+    })();
+  </script>
 </body>
 </html>

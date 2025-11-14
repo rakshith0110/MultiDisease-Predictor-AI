@@ -2,22 +2,27 @@
 {% block title %}Home — AI Disease Prediction{% endblock %}
 {% block content %}
 <section class="hero card" style="display:flex;align-items:center;gap:40px;padding:36px;">
-  <img src="{{ url_for('static', filename='image/home-img.svg') }}" alt="Doctor image" style="width:360px;max-width:40%;">
+  <img src="{{ url_for('static', filename='image/home_ai.png') }}" alt="Doctor image" style="width:360px;max-width:40%;">
+  
   <div class="hero-content" style="flex:1;">
-    <h1 style="font-size:2rem;margin:0 0 12px 0;">We Take Care Of Your Healthy Life</h1>
-    <p style="color:var(--muted);margin-bottom:20px;">
-      Your health is our top priority. With our AI-powered disease prediction system and chatbot
-      assistance, you can access instant health insights and support anytime, anywhere.
-    </p>
+    <h1 style="font-size:2rem;margin:0 0 12px 0;">Check Your Health with Trained AI & ML Models</h1>
+<p style="color:var(--muted);margin-bottom:20px;">
+  Predict multiple diseases instantly, view recommended prescriptions, and get additional support from our 
+  intelligent <strong>Medi ChatBot</strong>.
+</p>
 
-    <!-- Simple, valid link — uses Flask route name 'predict_page' defined in app.py -->
-    <a href="{{ url_for('predict_page') }}" class="btn">Get Started <i class="fas fa-chevron-right"></i></a>
+
+    <a href="{{ url_for('predict_page') }}" class="btn">
+      Get Started <i class="fas fa-chevron-right"></i>
+    </a>
   </div>
 </section>
 
 <div id="contact" class="card" style="text-align:center;margin-top:18px;">
   <h3 style="margin-bottom:6px;">Contact Us</h3>
-  <p style="margin:0;color:var(--muted);">Email: codewithrax@gmail.com | Phone: +91 7975554847</p>
+  <p style="margin:0;color:var(--muted);">
+    Email: codewithrax@gmail.com | Phone: +91 7975554847
+  </p>
 </div>
 
 {% include 'chatbot.html' %}

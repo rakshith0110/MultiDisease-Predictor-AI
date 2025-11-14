@@ -1,199 +1,210 @@
 {% extends "layout.html" %}
-{% block title %}Predict — AI Disease Prediction{% endblock %}
+{% block title %}Models — AI Disease Prediction{% endblock %}
 {% block content %}
-<style>
-/* Local styles (kept small; main styles live in static/css/style.css) */
-.predict-wrap { display:flex; gap:20px; align-items:flex-start; flex-wrap:wrap; position:relative; }
-aside.models { width:240px; min-width:200px; }
-.models .model-item { display:flex; gap:10px; align-items:center; padding:12px; border-radius:8px; cursor:pointer; border:1px solid #e6e6e6; background:#fff; margin-bottom:10px; }
-.models .model-item.active { border-color:var(--accent-dark); box-shadow:0 6px 18px rgba(16,24,40,0.06); }
-.form-area { flex:1; min-width:320px; }
 
-/* result styling */
-.result-box { padding:14px; border-radius:8px; margin-top:12px; font-weight:700; }
-.result-positive { background:#ffecec; color:#c21b1b; border:1px solid #f2a6a6; }
-.result-negative { background:#eafaf0; color:#167a3a; border:1px solid #b6e5c8; }
-.prescription { margin-top:10px; white-space:pre-line; color:#333; }
-</style>
+<section class="predict-page-wrapper" style="padding:24px 24px 48px;">
 
-<div class="card predict-wrap">
-  <!-- left column: list -->
-  <aside class="models">
-    <h3 style="margin-top:0;">Models</h3>
-    <div id="model-list">
-      <div class="model-item" data-model="diabetes">
-        <i class="fas fa-clipboard-check" style="color:var(--accent-dark); width:20px;"></i>
-        <div>
-          <div style="font-weight:700;">Diabetes</div>
-          <div style="font-size:0.85rem;color:var(--muted);">Blood sugar related</div>
+  <div class="card predict-wrap" style="padding:14px 18px; align-items:flex-start; gap:20px;">
+
+    <!-- LEFT: models list + heading -->
+    <aside class="models" aria-label="Models list" style="min-width:260px;">
+      <div class="models-header" style="margin-bottom:12px;">
+        <h2 style="margin:0 0 6px 0; font-size:1.6rem;">Select a model</h2>
+        <p style="margin:0;color:var(--muted);font-size:0.95rem;">Click a model on the left to load its input form.</p>
+      </div>
+
+      <div class="models-list">
+        <div class="model-item active" data-model="diabetes" tabindex="0">
+          <i class="fas fa-clipboard-check" style="color:var(--accent);margin-right:12px;"></i>
+          <div><strong>Diabetes</strong><br><small style="color:var(--muted);">Blood sugar related</small></div>
+        </div>
+
+        <div class="model-item" data-model="heart" tabindex="0">
+          <i class="fas fa-heart" style="color:var(--accent);margin-right:12px;"></i>
+          <div><strong>Heart Disease</strong><br><small style="color:var(--muted);">Cardiac risk</small></div>
+        </div>
+
+        <div class="model-item" data-model="parkinsons" tabindex="0">
+          <i class="fas fa-brain" style="color:var(--accent);margin-right:12px;"></i>
+          <div><strong>Parkinson's</strong><br><small style="color:var(--muted);">Neurological</small></div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- RIGHT: dynamic panel + forms (scrollable) -->
+    <div class="form-area" style="flex:1; min-width:420px;">
+
+      <!-- header panel (title + smaller illustration) -->
+      <div id="model-panel" class="card panel-small" style="padding:12px 14px; display:flex; gap:12px; align-items:center; justify-content:space-between;">
+        <div style="flex:1; min-width:200px;">
+          <h3 id="model-title" style="margin:0;font-size:1.25rem;">Diabetes Prediction</h3>
+          <p id="model-sub" style="margin:6px 0 0;color:var(--muted);font-size:0.95rem;">Fill the inputs and click Predict. Result appears below.</p>
+        </div>
+
+        <div style="width:120px; flex:0 0 120px; display:flex; align-items:center; justify-content:center;">
+          <img src="{{ url_for('static', filename='image/diagnostic.png') }}" alt="Diagnostic" class="model-illustration small">
         </div>
       </div>
 
-      <div class="model-item" data-model="heart">
-        <i class="fas fa-heart" style="color:var(--accent-dark); width:20px;"></i>
-        <div>
-          <div style="font-weight:700;">Heart Disease</div>
-          <div style="font-size:0.85rem;color:var(--muted);">Cardiac risk</div>
-        </div>
-      </div>
+      <!-- the scrollable form container -->
+      <div id="model-form-wrap" class="form-scroll-area" style="margin-top:16px;">
 
-      <div class="model-item" data-model="parkinsons">
-        <i class="fas fa-brain" style="color:var(--accent-dark); width:20px;"></i>
-        <div>
-          <div style="font-weight:700;">Parkinson's</div>
-          <div style="font-size:0.85rem;color:var(--muted);">Neurological</div>
-        </div>
+        <!-- ---------- DIABETES FORM (8 fields) ---------- -->
+        <form id="form-diabetes" class="model-form card" method="POST" action="{{ url_for('predictdiabetes') }}">
+          <div class="form-grid" style="display:grid; grid-template-columns: repeat(2,1fr); gap:14px 18px;">
+            <div>
+              <label>Pregnancies</label>
+              <input name="pregnancies" type="text" placeholder="e.g. 2" required>
+            </div>
+            <div>
+              <label>Glucose</label>
+              <input name="glucose" type="text" placeholder="e.g. 120" required>
+            </div>
+            <div>
+              <label>Blood Pressure</label>
+              <input name="bloodpressure" type="text" placeholder="e.g. 70" required>
+            </div>
+            <div>
+              <label>Skin Thickness</label>
+              <input name="skinthickness" type="text" placeholder="e.g. 20" required>
+            </div>
+            <div>
+              <label>Insulin</label>
+              <input name="insulin" type="text" placeholder="e.g. 85" required>
+            </div>
+            <div>
+              <label>BMI</label>
+              <input name="bmi" type="text" placeholder="e.g. 26.5" required>
+            </div>
+            <div>
+              <label>Diabetes Pedigree Function</label>
+              <input name="dpf" type="text" placeholder="e.g. 0.627" required>
+            </div>
+            <div>
+              <label>Age</label>
+              <input name="age" type="text" placeholder="e.g. 33" required>
+            </div>
+          </div>
+
+          <div style="margin-top:14px;">
+            <button class="btn" type="submit">Predict Diabetes</button>
+          </div>
+
+          {% if diabetes_result is defined %}
+          <div class="result-box" style="margin-top:12px; color:{{ 'green' if diabetes_result=='Negative' else 'red' }};">
+            {{ diabetes_result }} — {{ diabetes_message|default('') }}
+          </div>
+          {% endif %}
+        </form>
+
+        <!-- ---------- HEART FORM (13 fields) ---------- -->
+        <form id="form-heart" class="model-form card hidden" method="POST" action="{{ url_for('predictheartdisease') }}">
+          <div class="form-grid" style="display:grid; grid-template-columns: repeat(2,1fr); gap:14px 18px;">
+            <div><label>Age</label><input name="age" required></div>
+            <div><label>Sex (0=female,1=male)</label><input name="sex" required></div>
+            <div><label>Chest Pain Type (0-3)</label><input name="cp" required></div>
+            <div><label>Resting BP</label><input name="trestbps" required></div>
+            <div><label>Cholesterol</label><input name="chol" required></div>
+            <div><label>Fasting BS (0/1)</label><input name="fbs" required></div>
+            <div><label>Resting ECG (0-2)</label><input name="restecg" required></div>
+            <div><label>Max Heart Rate</label><input name="thalach" required></div>
+            <div><label>Exercise induced angina (0/1)</label><input name="exang" required></div>
+            <div><label>Oldpeak</label><input name="oldpeak" required></div>
+            <div><label>Slope (0-2)</label><input name="slope" required></div>
+            <div><label>Number of major vessels (0-4)</label><input name="ca" required></div>
+            <div><label>Thal (0/1/2)</label><input name="thal" required></div>
+          </div>
+
+          <div style="margin-top:14px;">
+            <button class="btn" type="submit">Predict Heart</button>
+          </div>
+
+          {% if heart_result is defined %}
+          <div class="result-box" style="margin-top:12px; color:{{ 'green' if heart_result=='Negative' else 'red' }};">
+            {{ heart_result }} — {{ heart_message|default('') }}
+          </div>
+          {% endif %}
+        </form>
+
+        <!-- ---------- PARKINSONS FORM (22 fields) ---------- -->
+        <form id="form-parkinsons" class="model-form card hidden" method="POST" action="{{ url_for('predictparkinsons') }}">
+          <div class="form-grid" style="display:grid; grid-template-columns: repeat(2,1fr); gap:14px 18px;">
+            {% for i in range(1,23) %}
+            <div>
+              <label>Feature {{ i }}</label>
+              <input name="f{{ i }}" required>
+            </div>
+            {% endfor %}
+          </div>
+
+          <div style="margin-top:14px;">
+            <button class="btn" type="submit">Predict Parkinsons</button>
+          </div>
+
+          {% if parkinsons_result is defined %}
+          <div class="result-box" style="margin-top:12px; color:{{ 'green' if parkinsons_result=='Negative' else 'red' }};">
+            {{ parkinsons_result }} — {{ parkinsons_message|default('') }}
+          </div>
+          {% endif %}
+        </form>
+
       </div>
     </div>
-  </aside>
+  </div>
+</section>
 
-  <!-- right column: dynamic form -->
-  <section class="form-area">
-    <div id="form-header" class="card">
-      <h2 id="form-title" style="margin:0;">Select a model</h2>
-      <p id="form-sub" style="margin:6px 0 0;color:var(--muted);">Click a model on the left to load its input form.</p>
-    </div>
-
-    <!-- Diabetes form -->
-    <form id="form-diabetes" class="card model-form" style="display:none;">
-      <div class="form-grid">
-        <label>Pregnancies <input name="field1" type="number" step="any" required></label>
-        <label>Glucose <input name="field2" type="number" step="any" required></label>
-        <label>Blood Pressure <input name="field3" type="number" step="any" required></label>
-        <label>Skin Thickness <input name="field4" type="number" step="any" required></label>
-        <label>Insulin <input name="field5" type="number" step="any" required></label>
-        <label>BMI <input name="field6" type="number" step="any" required></label>
-        <label>Diabetes Pedigree Function <input name="field7" type="number" step="any" required></label>
-        <label>Age <input name="field8" type="number" step="any" required></label>
-      </div>
-      <div style="margin-top:16px; display:flex; gap:12px; align-items:center;">
-        <button class="btn" type="submit">Predict Diabetes</button>
-        <div id="result-diabetes" style="flex:1"></div>
-      </div>
-      <div id="presc-diabetes" class="prescription"></div>
-    </form>
-
-    <!-- Heart form (13 fields) -->
-    <form id="form-heart" class="card model-form" style="display:none;">
-      <div class="form-grid">
-        <label>Age <input name="field1" type="number" step="any" required></label>
-        <label>Sex (0=female,1=male) <input name="field2" type="number" step="any" required></label>
-        <label>Chest Pain Type (cp: 0-3) <input name="field3" type="number" step="any" required></label>
-        <label>Resting BP (trestbps) <input name="field4" type="number" step="any" required></label>
-        <label>Cholesterol (chol) <input name="field5" type="number" step="any" required></label>
-        <label>Fasting BS > 120 mg/dl (fbs 0/1) <input name="field6" type="number" step="any" required></label>
-        <label>Resting ECG (restecg 0-2) <input name="field7" type="number" step="any" required></label>
-        <label>Max Heart Rate Achieved (thalach) <input name="field8" type="number" step="any" required></label>
-        <label>Exercise induced angina (exang 0/1) <input name="field9" type="number" step="any" required></label>
-        <label>Oldpeak (ST depression) <input name="field10" type="number" step="any" required></label>
-        <label>Slope (0-2) <input name="field11" type="number" step="any" required></label>
-        <label>Number of major vessels (ca 0-4) <input name="field12" type="number" step="any" required></label>
-        <label>Thal (0=normal,1=fixed,2=reversible) <input name="field13" type="number" step="any" required></label>
-      </div>
-      <div style="margin-top:16px; display:flex; gap:12px; align-items:center;">
-        <button class="btn" type="submit">Predict Heart</button>
-        <div id="result-heart" style="flex:1"></div>
-      </div>
-      <div id="presc-heart" class="prescription"></div>
-    </form>
-
-    <!-- Parkinsons form (22 fields) -->
-    <form id="form-parkinsons" class="card model-form" style="display:none;">
-      <div class="form-grid">
-        <label>MDVP:Fo(Hz) <input name="field1" type="number" step="any" required></label>
-        <label>MDVP:Fhi(Hz) <input name="field2" type="number" step="any" required></label>
-        <label>MDVP:Flo(Hz) <input name="field3" type="number" step="any" required></label>
-        <label>MDVP:Jitter(%) <input name="field4" type="number" step="any" required></label>
-        <label>MDVP:Jitter(Abs) <input name="field5" type="number" step="any" required></label>
-        <label>MDVP:RAP <input name="field6" type="number" step="any" required></label>
-        <label>MDVP:PPQ <input name="field7" type="number" step="any" required></label>
-        <label>Jitter:DDP <input name="field8" type="number" step="any" required></label>
-        <label>MDVP:Shimmer <input name="field9" type="number" step="any" required></label>
-        <label>MDVP:Shimmer(dB) <input name="field10" type="number" step="any" required></label>
-        <label>Shimmer:APQ3 <input name="field11" type="number" step="any" required></label>
-        <label>Shimmer:APQ5 <input name="field12" type="number" step="any" required></label>
-        <label>MDVP:APQ <input name="field13" type="number" step="any" required></label>
-        <label>Shimmer:DDA <input name="field14" type="number" step="any" required></label>
-        <label>NHR <input name="field15" type="number" step="any" required></label>
-        <label>HNR <input name="field16" type="number" step="any" required></label>
-        <label>RPDE <input name="field17" type="number" step="any" required></label>
-        <label>DFA <input name="field18" type="number" step="any" required></label>
-        <label>spread1 <input name="field19" type="number" step="any" required></label>
-        <label>spread2 <input name="field20" type="number" step="any" required></label>
-        <label>D2 <input name="field21" type="number" step="any" required></label>
-        <label>PPE <input name="field22" type="number" step="any" required></label>
-      </div>
-
-      <div style="margin-top:16px; display:flex; gap:12px; align-items:center;">
-        <button class="btn" type="submit">Predict Parkinsons</button>
-        <div id="result-parkinsons" style="flex:1"></div>
-      </div>
-      <div id="presc-parkinsons" class="prescription"></div>
-    </form>
-  </section>
-</div>
-
-<!-- include chatbot widget -->
 {% include 'chatbot.html' %}
 
-<!-- JS -->
+<!-- Toggle JS: switch models and forms -->
 <script>
-  // model toggle and AJAX form logic (same as provided previously)
-  document.addEventListener('DOMContentLoaded', function(){
-    const modelItems = document.querySelectorAll('.model-item');
+  (function(){
+    const items = document.querySelectorAll('.model-item');
     const forms = {
       diabetes: document.getElementById('form-diabetes'),
       heart: document.getElementById('form-heart'),
       parkinsons: document.getElementById('form-parkinsons')
     };
-    const headers = { title: document.getElementById('form-title'), sub: document.getElementById('form-sub') };
+    const title = document.getElementById('model-title');
+    const subtitle = document.getElementById('model-sub');
 
-    function clearActive(){
-      modelItems.forEach(i=>i.classList.remove('active'));
-      Object.values(forms).forEach(f=>f && (f.style.display='none'));
+    function showModel(name){
+      items.forEach(it => it.classList.toggle('active', it.dataset.model === name));
+      Object.values(forms).forEach(f => f.classList.add('hidden'));
+      if (forms[name]) forms[name].classList.remove('hidden');
+
+      if (name === 'diabetes') {
+        title.textContent = 'Diabetes Prediction';
+        subtitle.textContent = 'Fill the inputs and click Predict. Result appears below.';
+      } else if (name === 'heart') {
+        title.textContent = 'Heart Prediction';
+        subtitle.textContent = 'Fill the inputs and click Predict. Result appears below.';
+      } else {
+        title.textContent = "Parkinson's Prediction";
+        subtitle.textContent = 'Fill the inputs and click Predict. Result appears below.';
+      }
+      // scroll the right form area to top so user sees the form header
+      const wrap = document.querySelector('.form-scroll-area');
+      if (wrap) wrap.scrollTop = 0;
     }
 
-    modelItems.forEach(item=>{
-      item.addEventListener('click', ()=>{
-        const model = item.dataset.model;
-        clearActive();
-        item.classList.add('active');
-        const form = forms[model];
-        if(form) form.style.display = 'block';
-        headers.title.innerText = model.charAt(0).toUpperCase() + model.slice(1) + " Prediction";
-        headers.sub.innerText = "Fill the inputs and click Predict. Result appears below.";
-        document.getElementById('presc-'+model).innerText = '';
-        document.getElementById('result-'+model).innerHTML = '';
-        form && form.scrollIntoView({behavior:'smooth', block:'center'});
+    items.forEach(it=>{
+      it.addEventListener('click', ()=> showModel(it.dataset.model));
+      it.addEventListener('keypress', (e)=>{
+        if (e.key === 'Enter' || e.key === ' ') { showModel(it.dataset.model); e.preventDefault(); }
       });
     });
 
-    function handleFormSubmit(formEl, apiUrl, resultElId, prescElId){
-      if(!formEl) return;
-      formEl.addEventListener('submit', async (e)=>{
-        e.preventDefault();
-        const fd = new FormData(formEl);
-        const resultEl = document.getElementById(resultElId);
-        const prescEl = document.getElementById(prescElId);
-        resultEl.innerHTML = '<em>Predicting...</em>';
-        prescEl.innerText = '';
-        try{
-          const resp = await fetch(apiUrl, { method:'POST', body: fd });
-          const data = await resp.json();
-          if(data.error){ resultEl.innerHTML = '<div style="color:#c21b1b">'+(data.error||'Error')+'</div>'; return; }
-          if(data.positive) resultEl.innerHTML = '<div class="result-box result-positive">'+data.message+'</div>';
-          else resultEl.innerHTML = '<div class="result-box result-negative">'+data.message+'</div>';
-          prescEl.innerText = data.prescription || '';
-        }catch(err){
-          resultEl.innerHTML = '<div style="color:#c21b1b">Request failed</div>';
-          console.error(err);
-        }
-      });
-    }
-
-    handleFormSubmit(forms.diabetes, '/api/predict/diabetes', 'result-diabetes', 'presc-diabetes');
-    handleFormSubmit(forms.heart, '/api/predict/heart', 'result-heart', 'presc-heart');
-    handleFormSubmit(forms.parkinsons, '/api/predict/parkinsons', 'result-parkinsons', 'presc-parkinsons');
-  });
+    // show default on load
+    showModel('diabetes');
+  })();
 </script>
+
+<style>
+  /* small helpers */
+  .hidden { display: none !important; }
+  .model-item.active { border-color: var(--accent); background: #e9fff6; box-shadow: 0 6px 18px rgba(0,0,0,0.04); }
+  .result-box { padding:12px; border-radius:8px; background:#fff8f8; border:1px solid #f3dede; }
+  @media (max-width: 980px){ .models { position: static; } .form-area { max-height:none; } }
+</style>
+
 {% endblock %}

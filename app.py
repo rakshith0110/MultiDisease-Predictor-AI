@@ -17,9 +17,16 @@ def load_model(filename):
         return pickle.load(f)
 
 # Load models (if present)
-diabetes_model = load_model('diabetes.pkl')       # expects 8 features
-heart_model = load_model('heart.pkl')             # expects 13 features
-parkinsons_model = load_model('parkinsons.pkl')   # expects 22 features
+# Load models
+diabetes_model = load_model('diabetes.pkl')
+heart_model = load_model('heart.pkl')
+parkinsons_model = load_model('parkinsons.pkl')
+
+# === FIX: Create model aliases so prediction routes work ===
+diabetes_predict = diabetes_model
+heart_predict = heart_model
+parkinsons_predict = parkinsons_model
+
 
 PRESCRIPTIONS = {
     'diabetes': "Diet, exercise, monitor glucose, consult clinician.",
@@ -120,41 +127,82 @@ def api_predict_parkinsons():
         return jsonify(error="Prediction failed: " + str(e)), 500
 
 # Optional: classic form POST handlers (render precaution pages)
+# ---------- PREDICTION ROUTES (paste after model loads) ----------
+from flask import flash  # optional
+
 @app.route('/predictdiabetes', methods=['POST'])
-def predictdiabetes_form():
-    if diabetes_model is None:
-        return render_template('diabetesprecaution.html', output_text="Model not available.")
+def predictdiabetes():
     try:
-        X = parse_numeric_fields(request.form, 8)
-        pos = make_prediction(diabetes_model, X)
-        msg = "This person has Diabetes" if pos else "This person does not have Diabetes"
-        return render_template('diabetesprecaution.html', output_text=msg)
+        # expected field names from template
+        keys = ['pregnancies','glucose','bloodpressure','skinthickness','insulin','bmi','dpf','age']
+        data = []
+        for k in keys:
+            v = request.form.get(k, None)
+            if v is None or v == '':
+                raise ValueError(f"Missing value for {k}")
+            data.append(float(v))
+        arr = np.array([data])               # shape (1,8)
+        pred = diabetes_predict.predict(arr)
+        if int(pred[0]) == 1:
+            result = 'Positive'
+            message = 'Model indicates presence of Diabetes. Suggest consult a doctor; consider diet control, medication and regular monitoring.'
+        else:
+            result = 'Negative'
+            message = "No Diabetes detected by model. Maintain healthy diet and follow-up if symptoms appear."
+        # render predict page and display inline result
+        return render_template('predict.html', diabetes_result=result, diabetes_message=message)
     except Exception as e:
-        return render_template('diabetesprecaution.html', output_text=f"Error: {e}")
+        # show the error on the same page (helpful during dev)
+        return render_template('predict.html', diabetes_result='Error', diabetes_message=str(e))
+
 
 @app.route('/predictheartdisease', methods=['POST'])
-def predictheart_form():
-    if heart_model is None:
-        return render_template('heartPrecuations.html', output_text="Model not available.")
+def predictheartdisease():
     try:
-        X = parse_numeric_fields(request.form, 13)
-        pos = make_prediction(heart_model, X)
-        msg = "This person has Heart Disease" if pos else "This person does not have Heart Disease"
-        return render_template('heartPrecuations.html', output_text=msg)
+        # 13 features as used in the form
+        keys = ['age','sex','cp','trestbps','chol','fbs','restecg','thalach','exang','oldpeak','slope','ca','thal']
+        data = []
+        for k in keys:
+            v = request.form.get(k, None)
+            if v is None or v == '':
+                raise ValueError(f"Missing value for {k}")
+            data.append(float(v))
+        arr = np.array([data])   # shape (1,13)
+        pred = heart_predict.predict(arr)
+        if int(pred[0]) == 1:
+            result = 'Positive'
+            message = 'Model indicates possible heart disease. Seek cardiology consultation and run recommended tests (ECG, stress-test).'
+        else:
+            result = 'Negative'
+            message = "Low heart disease risk predicted. Keep healthy lifestyle and periodic checkups."
+        return render_template('predict.html', heart_result=result, heart_message=message)
     except Exception as e:
-        return render_template('heartPrecuations.html', output_text=f"Error: {e}")
+        return render_template('predict.html', heart_result='Error', heart_message=str(e))
+
 
 @app.route('/predictparkinsons', methods=['POST'])
-def predictparkinsons_form():
-    if parkinsons_model is None:
-        return render_template('parikson_precaution.html', output_text="Model not available.")
+def predictparkinsons():
     try:
-        X = parse_numeric_fields(request.form, 22)
-        pos = make_prediction(parkinsons_model, X)
-        msg = "This person has Parkinson's" if pos else "This person does not have Parkinson's"
-        return render_template('parikson_precaution.html', output_text=msg)
+        # fields f1..f22 used by template
+        keys = [f'f{i}' for i in range(1, 23)]
+        data = []
+        for k in keys:
+            v = request.form.get(k, None)
+            if v is None or v == '':
+                raise ValueError(f"Missing value for {k}")
+            data.append(float(v))
+        arr = np.array([data])   # shape (1,22)
+        pred = parkinsons_predict.predict(arr)
+        if int(pred[0]) == 1:
+            result = 'Positive'
+            message = "Model indicates Parkinson's-like pattern. Recommend neurology referral for clinical confirmation."
+        else:
+            result = 'Negative'
+            message = "No Parkinson's pattern detected by model. Monitor symptoms and consult if concerns arise."
+        return render_template('predict.html', parkinsons_result=result, parkinsons_message=message)
     except Exception as e:
-        return render_template('parikson_precaution.html', output_text=f"Error: {e}")
+        return render_template('predict.html', parkinsons_result='Error', parkinsons_message=str(e))
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
