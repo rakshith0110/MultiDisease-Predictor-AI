@@ -79,7 +79,7 @@ body{
   align-items:center;
 }
 .navbar a{
-  color:#fff;
+  color:#000000;
   text-decoration:none;
   font-weight:600;
   padding:8px 12px;
@@ -87,7 +87,7 @@ body{
   transition:background .14s ease, transform .12s ease;
 }
 .navbar a:hover{
-  background: rgba(255,255,255,0.08);
+  background: rgba(255, 255, 255, 0.187);
   transform: translateY(-2px);
 }
 

@@ -4,31 +4,6 @@
 It's an end-to-end Machine Learning Project. The purpose of this project is to predict whether a person is suffering from a particular disease or not on the basis of his/her input data. The prediction has been done by using Machine Learning (ML) classification algorithms . Currently, this web app can predict 3 types of diseases (Diabetes, Parkinson's and Heart Disease). 
 
 
-
-
-### Screenshots 
-
-![Screenshot 2023-03-18 at 3 34 48 PM](https://user-images.githubusercontent.com/110475111/226099285-8dc371e0-a9f8-485b-b2ed-c40b8b899b0f.png)
-
-![Screenshot 2023-03-18 at 3 35 01 PM](https://user-images.githubusercontent.com/110475111/226099298-418bf7b0-f102-4d58-a4b9-c29052019582.png)
-
-![Screenshot 2023-03-18 at 3 35 11 PM](https://user-images.githubusercontent.com/110475111/226099303-51995af7-8bd0-4bbb-8776-50551dfb6e55.png)![Screenshot 2023-03-18 at 3 35 19 PM](https://user-images.githubusercontent.com/110475111/226099308-33ad3dbc-90e7-4f8c-812d-b5613b4ad1ea.png)
-
-![Screenshot 2023-03-18 at 3 35 24 PM](https://user-images.githubusercontent.com/110475111/226099309-d0e71a8b-ecb8-4fb7-9e00-b6cc00043169.png)
-
-
-
-![Screenshot 2023-03-18 at 3 35 39 PM](https://user-images.githubusercontent.com/110475111/226099321-4e532f92-420c-47ea-b857-50a7809889f6.png)
-
-![Screenshot 2023-03-18 at 3 36 15 PM](https://user-images.githubusercontent.com/110475111/226099326-7808814b-d2af-45a0-97b0-46f2a15df77c.png)!
-![Screenshot 2023-03-18 at 3 35 33 PM](https://user-images.githubusercontent.com/110475111/226099417-cd525a82-2625-44f6-835f-d1b0e5c8ff29.png)
-
-![Screenshot 2023-03-18 at 3 36 54 PM](https://user-images.githubusercontent.com/110475111/226099346-cf7356bb-c974-489a-b5a6-34faa863c1a3.png)
-![Screenshot 2023-03-18 at 3 37 17 PM](https://user-images.githubusercontent.com/110475111/226099353-1d3daafd-5fda-4661-849c-7e38f9e436fd.png)
-![Screenshot 2023-03-18 at 3 37 49 PM](https://user-images.githubusercontent.com/110475111/226099358-553d7afa-58c5-4220-8b82-e1c5e6614bdf.png)![Screenshot 2023-03-18 at 3 39 25 PM](https://user-images.githubusercontent.com/110475111/226099364-75a5baed-c209-4e46-81bd-5a3e69a8df9f.png)
-
-![Screenshot 2023-03-18 at 3 41 02 PM](https://user-images.githubusercontent.com/110475111/226099373-ab9a1210-e156-4cec-a620-c5b1cfd59a9c.png)
-
 The datasets that are used for training the ML models are:
 
 - **The diabetes dataset consists of 768 data points, with each datapoint having 8 features. This dataset is Pima Indians Diabetes Database found on the kaggle.**
