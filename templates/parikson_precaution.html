@@ -1,21 +1,46 @@
 {% extends "layout.html" %}
-{% block title %}Parkinson's Result{% endblock %}
-{% block content %}
-<div class="card">
-  <h2>Parkinson's Result</h2>
-  {% if output_text %}
-    <div style="font-weight:700; margin-bottom:12px;">{{ output_text }}</div>
-  {% endif %}
-  <div>
-    <h4>Precautions</h4>
-    <ul>
-      <li>Consult a neurologist for clinical evaluation and confirmation.</li>
-      <li>Consider physiotherapy and balance training programs.</li>
-      <li>Discuss early symptomatic treatments if recommended by a specialist.</li>
-    </ul>
-  </div>
-  <a class="btn" href="{{ url_for('predict_page') }}" style="margin-top:12px; display:inline-block;">Back</a>
-</div>
+{% block title %}Parkinson Precautions — Multi Disease Predictor{% endblock %}
 
-{% include 'chatbot.html' %}
+{% block content %}
+<h2 class="page-title">Parkinson's Result</h2>
+
+<a class="btn-secondary" href="{{ url_for('parkinsons_page') }}" style="display:inline-block; margin-bottom:18px;">← Back</a>
+
+{% set res = request.args.get('res','').lower() %}
+
+{% if res == 'positive' %}
+  <h3 style="color:var(--danger)">Important — Positive result</h3>
+  <p>Model suggests Parkinson’s-like pattern. Seek neurology referral for clinical confirmation.</p>
+  <ul>
+    <li>1. Book a neurologist appointment; bring voice/speech samples and symptom notes.</li>
+    <li>2. Expect clinical exams: UPDRS scale, gait & balance assessment, and possible neuroimaging.</li>
+    <li>3. Discuss medications (levodopa and others) only under specialist guidance.</li>
+    <li>4. Begin physiotherapy & occupational therapy to improve mobility and daily function.</li>
+    <li>5. Consider speech therapy for voice/swallowing difficulties.</li>
+    <li>6. Safety modifications at home to prevent falls.</li>
+    <li>7. Address sleep problems, mood changes and constipation with appropriate therapies.</li>
+    <li>8. Learn medication schedules and motor fluctuation signs.</li>
+    <li>9. Join support groups and Parkinson’s education programmes.</li>
+    <li>10. Schedule regular follow-ups with neurology for medication optimization.</li>
+  </ul>
+
+{% else %}
+  <h3 style="color:var(--success)">Good news — Negative result</h3>
+  <p>No Parkinson’s pattern detected. Maintain brain & motor health:</p>
+
+  <ol>
+    <li>Stay physically active — balance, strength and aerobic exercises.</li>
+    <li>Practice agility/balance training (tai chi, yoga) to prevent falls.</li>
+    <li>Eat a Mediterranean-style diet rich in antioxidants and fiber.</li>
+    <li>Keep socially and mentally active — puzzles, reading, new skills.</li>
+    <li>Get good quality sleep and treat sleep apnea if present.</li>
+    <li>Avoid environmental toxins where possible; use protective measures when required.</li>
+    <li>Monitor for new symptoms (tremor, slowness, stiffness) and report early.</li>
+    <li>Regular checkups and early assessment if concerns arise.</li>
+    <li>Manage cardiovascular risk factors (they affect brain health).</li>
+    <li>Consider community exercise groups for motivation and safety.</li>
+  </ol>
+
+{% endif %}
+
 {% endblock %}

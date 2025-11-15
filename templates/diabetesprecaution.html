@@ -1,22 +1,56 @@
 {% extends "layout.html" %}
-{% block title %}Diabetes Result{% endblock %}
-{% block content %}
-<div class="card">
-  <h2>Diabetes Result</h2>
-  {% if output_text %}
-    <div style="font-weight:700; margin-bottom:12px;">{{ output_text }}</div>
-  {% endif %}
-  <div>
-    <h4>Precautions</h4>
-    <ul>
-      <li>Maintain a balanced diet and regular exercise routine.</li>
-      <li>Monitor blood sugar levels consistently.</li>
-      <li>Avoid sugary and processed foods.</li>
-      <li>Consult a clinician for confirmatory testing and treatment.</li>
-    </ul>
-  </div>
-  <a class="btn" href="{{ url_for('predict_page') }}" style="margin-top:12px; display:inline-block;">Back</a>
-</div>
+{% block title %}Diabetes Precautions — Multi Disease Predictor{% endblock %}
 
-{% include 'chatbot.html' %}
+{% block content %}
+<h2 class="page-title">Diabetes Result</h2>
+
+<!-- styled Back button -->
+<a class="btn-secondary" href="{{ url_for('diabetes_page') }}" style="display:inline-block; margin-bottom:18px;">← Back</a>
+
+{% set res = request.args.get('res','').lower() %}
+
+{% if res == 'positive' %}
+  <h3 style="color:var(--danger)">Important — Positive result</h3>
+  <p>Please remember: this is a model prediction. Seek clinical confirmation urgently.</p>
+  <ul>
+    <li>1. Book an appointment with an endocrinologist or primary care physician immediately.</li>
+    <li>2. Get confirmatory tests: fasting glucose, HbA1c, OGTT as recommended by your doctor.</li>
+    <li>3. Monitor blood glucose regularly—learn SMBG or use CGM if advised.</li>
+    <li>4. Start a medically supervised diet plan; consider carbohydrate counting.</li>
+    <li>5. Discuss medications — metformin or others as per clinician guidance.</li>
+    <li>6. Regular moderate exercise: 30 mins most days (walking, cycling, swimming).</li>
+    <li>7. Manage blood pressure and cholesterol—get lipid profile and BP checked.</li>
+    <li>8. Learn hypoglycemia signs and carry quick-sugar sources.</li>
+    <li>9. Plan follow-up visits and keep a glucose log.</li>
+    <li>10. Seek diabetes education programs for long-term self-management.</li>
+  </ul>
+
+  <h4>Immediate actions & red flags (seek urgent care)</h4>
+  <p>If you experience severe thirst, frequent urination, confusion, rapid breathing, or loss of consciousness — go to ER immediately.</p>
+
+{% else %}
+  <h3 style="color:var(--success)">Good news — Negative result</h3>
+
+  <p>The model did not indicate diabetes risk. To stay healthy, follow these 10 recommendations:</p>
+  <ol>
+    <li>Maintain a balanced diet: plenty of vegetables, lean proteins, whole grains, and legumes.</li>
+    <li>Limit added sugars and refined carbohydrates (sodas, sweets, white bread).</li>
+    <li>Choose healthy fats (olive oil, nuts, seeds) and avoid trans fats.</li>
+    <li>Keep a healthy BMI — combine portion control and regular exercise.</li>
+    <li>Exercise ≥ 150 minutes/week moderate aerobic activity (walking, cycling).</li>
+    <li>Prefer high-fiber foods and low-GI carbohydrates to control blood sugar.</li>
+    <li>Stay hydrated and reduce sugary drinks; prefer water or unsweetened tea.</li>
+    <li>Get regular health check-ups: fasting glucose and HbA1c yearly if risk factors exist.</li>
+    <li>Avoid smoking and limit alcohol intake.</li>
+    <li>Sleep 7–8 hours and manage stress (mindfulness, yoga, hobbies).</li>
+  </ol>
+
+  <h4>Foods to prefer</h4>
+  <p>Leafy greens, berries, legumes, oats, nuts, fish (omega-3), and lean poultry.</p>
+
+  <h4>Foods to avoid</h4>
+  <p>Sweetened beverages, processed snacks, pastries, deep-fried foods, and excessive red meat.</p>
+
+{% endif %}
+
 {% endblock %}

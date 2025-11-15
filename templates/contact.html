@@ -1,0 +1,89 @@
+{% extends "layout.html" %}
+{% block title %}Contact — Multi Disease Predictor{% endblock %}
+
+{% block content %}
+<h2 class="page-title">Contact Us</h2>
+
+<div class="form-card" style="padding:25px; max-width:820px; margin:auto;">
+
+  <h3>We’d Love to Hear From You</h3>
+  <p style="margin-top:6px; color:#555;">
+    Have questions, suggestions, or facing issues?  
+    Send us a message — we’ll get back to you as soon as possible.
+  </p>
+
+  <!-- Contact Info -->
+  <div style="margin-top:18px; margin-bottom:20px;">
+    <p><strong>Email:</strong> support@multidiseasepredictor.com</p>
+    <p><strong>Developer:</strong> Rakshith P R</p>
+  </div>
+
+  <!-- EmailJS Form -->
+  <form id="contactForm">
+    <div class="two-grid" style="gap:15px 20px;">
+      <label>Name
+        <input type="text" id="name" name="name" required placeholder="e.g. John Doe">
+      </label>
+
+      <label>Email
+        <input type="email" id="email" name="email" required placeholder="e.g. john@example.com">
+      </label>
+    </div>
+
+    <label style="margin-top:12px;">Message
+      <textarea id="message" name="message" required placeholder="Write your message..." rows="5" style="resize:none;"></textarea>
+    </label>
+
+    <button type="button" onclick="sendEmail()" class="btn-primary" style="margin-top:18px;">
+      Send Message
+    </button>
+
+    <!-- Success / Error Alerts -->
+    <div id="successMsg"
+         style="display:none; margin-top:15px; background:#e7ffe8; padding:12px; border-left:4px solid #22c55e; border-radius:6px;">
+        Message sent successfully!
+    </div>
+
+    <div id="errorMsg"
+         style="display:none; margin-top:15px; background:#ffe5e5; padding:12px; border-left:4px solid #ef4444; border-radius:6px;">
+        Failed to send message. Please try again.
+    </div>
+
+  </form>
+
+</div>
+
+<!-- EmailJS Script -->
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+<script>
+(function(){
+  emailjs.init("zdWd0AelnMC8Denab");
+})();
+
+function sendEmail() {
+  const name = document.getElementById("name").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const message = document.getElementById("message").value.trim();
+
+  if (!name || !email || !message) {
+    alert("Please fill all fields before submitting.");
+    return;
+  }
+
+  emailjs.send("service_up3nnt9", "template_4own90m", { 
+      from_name: name,
+      reply_to: email,
+      message: message
+    })
+    .then(function() {
+        document.getElementById("successMsg").style.display = "block";
+        document.getElementById("errorMsg").style.display = "none";
+        document.getElementById("contactForm").reset();
+    }, function() {
+        document.getElementById("errorMsg").style.display = "block";
+        document.getElementById("successMsg").style.display = "none";
+    });
+}
+</script>
+
+{% endblock %}

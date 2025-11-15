@@ -1,28 +1,80 @@
 {% extends "layout.html" %}
-{% block title %}Home — AI Disease Prediction{% endblock %}
-{% block content %}
-<section class="hero card" style="display:flex;align-items:center;gap:40px;padding:36px;">
-  <img src="{{ url_for('static', filename='image/home_ai.png') }}" alt="Doctor image" style="width:360px;max-width:40%;">
-  
-  <div class="hero-content" style="flex:1;">
-    <h1 style="font-size:2rem;margin:0 0 12px 0;">Check Your Health with Trained AI & ML Models</h1>
-<p style="color:var(--muted);margin-bottom:20px;">
-  Predict multiple diseases instantly, view recommended prescriptions, and get additional support from our 
-  intelligent <strong>Medi ChatBot</strong>.
-</p>
+{% block title %}Multi Disease Predictor{% endblock %}
 
-    <a href="{{ url_for('predict_page') }}" class="btn">
-      Get Started <i class="fas fa-chevron-right"></i>
+
+{% block content %}
+
+<section class="hero-section"
+         style="
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            flex-wrap:wrap;
+            gap:30px;
+            padding:20px 0;
+         ">
+
+  <!-- LEFT TEXT -->
+  <div class="hero-text" style="flex:1; min-width:280px;">
+    
+    <h1 style="font-size:2rem; font-weight:800; margin:0 0 12px 0; color:#0b3558;">
+    Multi Disease Predictor with ML Models
+    </h1>
+
+
+    <p style="font-size:1rem; color:var(--muted); line-height:1.6;">
+      Predict the risk of Diabetes, Heart Disease, and Parkinson’s instantly with our
+      machine-learning powered health analysis tool.  
+      Fast, accurate, and easy to use.
+    </p>
+
+    <a href="{{ url_for('models') }}" 
+       class="btn-primary" 
+       style="margin-top:18px; display:inline-block;">
+       Start Prediction →
     </a>
   </div>
+
+  <!-- RIGHT IMAGE -->
+  <div class="hero-image" style="flex:1; min-width:260px; text-align:center;">
+    <img src="{{ url_for('static', filename='image/home_ai.png') }}"
+         alt="AI Medical"
+         style="width:100%; max-width:380px; border-radius:16px;">
+  </div>
+
 </section>
 
-<div id="contact" class="card" style="text-align:center;margin-top:18px;">
-  <h3 style="margin-bottom:6px;">Contact Us</h3>
-  <p style="margin:0;color:var(--muted);">
-    Email: codewithrax@gmail.com | Phone: +91 7975554847
-  </p>
-</div>
+
+
+<!-- FEATURES SECTION -->
+<section class="container" style="margin-top:40px;">
+
+  <h2 class="page-title">Why Choose Our AI Predictor?</h2>
+
+  <div class="model-grid">
+
+    <div class="model-card">
+      <i class="fa-solid fa-brain"></i>
+      <h3>AI Powered</h3>
+      <p>Advanced machine learning models for quick and accurate predictions.</p>
+    </div>
+
+    <div class="model-card">
+      <i class="fa-solid fa-chart-line"></i>
+      <h3>Instant Results</h3>
+      <p>Get disease prediction outcomes within seconds.</p>
+    </div>
+
+    <div class="model-card">
+      <i class="fa-solid fa-mobile-screen"></i>
+      <h3>Fully Responsive</h3>
+      <p>Works perfectly on all devices — mobiles, tablets & desktops.</p>
+    </div>
+
+  </div>
+
+</section>
+
 
 {% include 'chatbot.html' %}
 {% endblock %}

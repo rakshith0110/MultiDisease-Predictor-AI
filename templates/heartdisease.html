@@ -1,27 +1,112 @@
 {% extends "layout.html" %}
-{% block title %}Heart Disease Prediction{% endblock %}
+{% block title %}Heart Disease — Multi Disease Predictor{% endblock %}
+
 {% block content %}
-<div class="card">
-  <h2>Heart Disease Prediction</h2>
-  <form action="{{ url_for('predictheartdisease') }}" method="post">
-    <div class="form-grid">
-      <label>Age <input type="number" name="field1" required></label>
-      <label>Sex (0=female,1=male) <input type="number" name="field2" required></label>
-      <label>Chest Pain Type (0–3) <input type="number" name="field3" required></label>
-      <label>Resting BP <input type="number" name="field4" required></label>
-      <label>Cholesterol <input type="number" name="field5" required></label>
-      <label>Fasting BS (0/1) <input type="number" name="field6" required></label>
-      <label>Resting ECG (0-2) <input type="number" name="field7" required></label>
-      <label>Max HR <input type="number" name="field8" required></label>
-      <label>Exercise induced angina (0/1) <input type="number" name="field9" required></label>
-      <label>Oldpeak <input type="number" name="field10" step="any" required></label>
-      <label>Slope (0-2) <input type="number" name="field11" required></label>
-      <label>Number of major vessels (ca 0-4) <input type="number" name="field12" required></label>
-      <label>Thal (0=normal,1=fixed,2=reversible) <input type="number" name="field13" required></label>
-    </div>
-    <button class="btn" style="margin-top:18px;">Predict</button>
-  </form>
+<h2 class="page-title">Heart Disease Prediction</h2>
+
+<!-- Predict button (top) -->
+<button class="btn-primary" type="button"
+        onclick="validateFormAndSubmit('heartForm','heartError')"
+        style="margin-bottom:12px;">
+    Predict
+</button>
+
+<!-- Error box (hidden) -->
+<div id="heartError" style="display:none; background:#ffeef0; border-left:4px solid #e11d48; padding:12px; margin-bottom:12px; border-radius:8px;">
+  <strong style="color:#b91c1c">Error:</strong>
+  <span style="margin-left:8px;color:#7f1d1d">Please fill all required fields before predicting.</span>
 </div>
 
+<!-- Result box -->
+{% if heart_result %}
+<div class="result-box {{ 'positive' if heart_result=='Positive' else 'negative' }}" style="margin-bottom:18px;">
+  <h3>{{ heart_result }}</h3>
+  <p>{{ heart_message }}</p>
+  <a class="btn-secondary" href="{{ url_for('heart_precautions') }}?res={{ heart_result }}">More details →</a>
+</div>
+{% endif %}
+
+<!-- FORM -->
+<form id="heartForm" action="{{ url_for('predictheartdisease') }}" method="POST" class="form-card">
+  <div class="two-grid" style="gap:15px 25px;">
+    <label>Age
+      <input name="age" required type="number" placeholder="e.g. 18–90">
+    </label>
+
+    <label>Sex (0 = Female, 1 = Male)
+      <input name="sex" required type="number" placeholder="e.g. 0 or 1">
+    </label>
+
+    <label>Chest Pain Type
+      <input name="cp" required type="number" placeholder="e.g. 0–3">
+    </label>
+
+    <label>Resting Blood Pressure (mm Hg)
+      <input name="trestbps" required type="number" placeholder="e.g. 80–200">
+    </label>
+
+    <label>Cholesterol (mg/dL)
+      <input name="chol" required type="number" placeholder="e.g. 100–600">
+    </label>
+
+    <label>Fasting Blood Sugar (0 = No, 1 = Yes)
+      <input name="fbs" required type="number" placeholder="e.g. 0 or 1">
+    </label>
+
+    <label>Resting ECG
+      <input name="restecg" required type="number" placeholder="e.g. 0–2">
+    </label>
+
+    <label>Max Heart Rate Achieved
+      <input name="thalach" required type="number" placeholder="e.g. 60–220">
+    </label>
+
+    <label>Exercise Induced Angina (0 = No, 1 = Yes)
+      <input name="exang" required type="number" placeholder="e.g. 0 or 1">
+    </label>
+
+    <label>Oldpeak (ST depression)
+      <input name="oldpeak" required type="number" step="any" placeholder="e.g. 0.0–6.0">
+    </label>
+
+    <label>Slope
+      <input name="slope" required type="number" placeholder="e.g. 0–2">
+    </label>
+
+    <label>Number of major vessels (0–4)
+      <input name="ca" required type="number" placeholder="e.g. 0–4">
+    </label>
+
+    <label>Thal (0=normal,1=fixed,2=reversible)
+      <input name="thal" required type="number" placeholder="e.g. 0–3">
+    </label>
+  </div>
+
+  <!-- hidden submit -->
+  <button type="submit" style="display:none;"></button>
+</form>
+
 {% include 'chatbot.html' %}
+
+<!-- Validation script -->
+<script>
+function validateFormAndSubmit(formId, errorId) {
+  const form = document.getElementById(formId);
+  const inputs = form.querySelectorAll('input[required]');
+  let missing = false;
+  for (let i=0; i<inputs.length; i++) {
+    const v = inputs[i].value;
+    if (!v || !v.toString().trim()) { missing = true; break; }
+  }
+  const err = document.getElementById(errorId);
+  if (missing) {
+    err.style.display = 'block';
+    err.scrollIntoView({behavior:'smooth', block:'center'});
+    return false;
+  } else {
+    err.style.display = 'none';
+    form.submit();
+  }
+}
+</script>
 {% endblock %}

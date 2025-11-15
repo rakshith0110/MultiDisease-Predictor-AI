@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+{% block title %}Choose Model{% endblock %}
+{% block content %}
+
+<h2 class="page-title">Select Prediction Model</h2>
+
+<div class="model-grid">
+
+  <a href="{{ url_for('diabetes_page') }}" class="model-card">
+    <i class="fa-solid fa-syringe"></i>
+    <h3>Diabetes Prediction</h3>
+    <p>Predict diabetes using clinical parameters.</p>
+  </a>
+
+  <a href="{{ url_for('heart_page') }}" class="model-card">
+    <i class="fa-solid fa-heart-circle-bolt"></i>
+    <h3>Heart Disease</h3>
+    <p>Predict risk of cardiovascular disease.</p>
+  </a>
+
+  <a href="{{ url_for('parkinsons_page') }}" class="model-card">
+    <i class="fa-solid fa-brain"></i>
+    <h3>Parkinson’s Disease</h3>
+    <p>Detect Parkinson’s symptoms using voice metrics.</p>
+  </a>
+
+</div>
+
+{% include 'chatbot.html' %}
+{% endblock %}
+

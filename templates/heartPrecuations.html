@@ -1,21 +1,46 @@
 {% extends "layout.html" %}
-{% block title %}Heart Result{% endblock %}
-{% block content %}
-<div class="card">
-  <h2>Heart Disease Result</h2>
-  {% if output_text %}
-    <div style="font-weight:700; margin-bottom:12px;">{{ output_text }}</div>
-  {% endif %}
-  <div>
-    <h4>Precautions</h4>
-    <ul>
-      <li>Seek medical evaluation — ECG and lipid tests recommended.</li>
-      <li>Adopt a low-sodium, heart-healthy diet and avoid smoking.</li>
-      <li>Regular moderate exercise after physician clearance.</li>
-      <li>Follow cardiologist's recommendations for medications if required.</li>
-    </ul>
-  </div>
-  <a class="btn" href="{{ url_for('predict_page') }}" style="margin-top:12px; display:inline-block;">Back</a>
+{% block title %}Heart Precautions — Multi Disease Predictor{% endblock %}
 
-{% include 'chatbot.html' %}
+{% block content %}
+<h2 class="page-title">Heart Disease Result</h2>
+
+<a class="btn-secondary" href="{{ url_for('heart_page') }}" style="display:inline-block; margin-bottom:18px;">← Back</a>
+
+{% set res = request.args.get('res','').lower() %}
+
+{% if res == 'positive' %}
+  <h3 style="color:var(--danger)">Important — Positive result</h3>
+  <p>Please consult a cardiologist for evaluation and further testing.</p>
+  <ul>
+    <li>1. Urgent cardiology appointment for ECG, echocardiogram and stress testing as advised.</li>
+    <li>2. Blood tests: lipid profile, troponin (if chest pain), basic metabolic panel.</li>
+    <li>3. Start/optimize heart-healthy medications only under doctor guidance (statins, antihypertensives, antiplatelets).</li>
+    <li>4. Avoid heavy exertion until cleared by a cardiologist.</li>
+    <li>5. Monitor chest pain, breathlessness, dizziness — seek emergency care if severe.</li>
+    <li>6. Begin medically supervised cardiac rehabilitation where indicated.</li>
+    <li>7. Control risk factors: blood pressure, blood sugar, cholesterol.</li>
+    <li>8. Stop smoking immediately and reduce alcohol.</li>
+    <li>9. Adopt a low-salt, Mediterranean-style diet; increase fruits & vegetables.</li>
+    <li>10. Plan follow-ups and medication reviews.</li>
+  </ul>
+
+{% else %}
+  <h3 style="color:var(--success)">Good news — Negative result</h3>
+  <p>Model does not indicate significant heart disease risk. Maintain cardiovascular health:</p>
+
+  <ol>
+    <li>Exercise regularly (150 min/week moderate activity + strength twice weekly).</li>
+    <li>Eat a heart-healthy diet (Mediterranean style — olive oil, fish, legumes).</li>
+    <li>Limit salt to < 5g/day; avoid processed high-salt foods.</li>
+    <li>Keep cholesterol & triglycerides checked and controlled.</li>
+    <li>Control blood pressure — monitor regularly.</li>
+    <li>Maintain healthy weight and waist circumference.</li>
+    <li>Avoid smoking; seek cessation support if needed.</li>
+    <li>Limit alcohol to recommended guidelines.</li>
+    <li>Manage stress with relaxation techniques.</li>
+    <li>Have periodic check-ups and screen for diabetes and lipids.</li>
+  </ol>
+
+{% endif %}
+
 {% endblock %}
